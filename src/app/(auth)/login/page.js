@@ -87,18 +87,16 @@ export default function LoginPage() {
           <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
           {/* Brand */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#c9a870,#f0e2c4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12, color: '#07111f' }}>UI</div>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#f0e2c4', lineHeight: 1.2 }}>Ubuntu International</div>
-              <div style={{ fontSize: 10, color: '#c9a870' }}>Exchange Ltd</div>
-            </div>
+          <div style={{ position: 'relative' }}>
+            <img src="/logo.jpeg" alt="Ubuntu International Exchange" style={{ width: 140, height: 'auto', objectFit: 'contain' }} />
           </div>
 
           {/* Middle content */}
           <div style={{ position: 'relative' }}>
-            {/* Globe orb */}
-            <div style={{ width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(ellipse at 35% 35%, rgba(240,226,196,.2) 0%, rgba(201,168,112,.25) 35%, rgba(120,80,10,.15) 60%, transparent 80%)', boxShadow: '0 0 80px 20px rgba(201,168,112,.08)', margin: '0 auto 36px' }} />
+            {/* Logo */}
+            <div style={{ width: 220, margin: '0 auto 36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="/logo.jpeg" alt="Ubuntu International Exchange" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+            </div>
             <h2 style={{ fontSize: 32, fontWeight: 800, color: '#f0e2c4', lineHeight: 1.15, marginBottom: 14 }}>
               Move Money<br />Across Africa
             </h2>
