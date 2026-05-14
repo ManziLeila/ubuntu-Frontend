@@ -111,7 +111,7 @@ export function isAuthenticated() {
 /**
  * Returns the role string from the stored user object, or null if absent.
  *
- * Expected roles: 'client' | 'agent' | 'admin' | 'compliance_officer' | 'super_admin'
+ * Expected roles: 'client' | 'agent' | 'admin'
  *
  * @returns {string | null}
  */

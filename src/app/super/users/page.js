@@ -8,8 +8,8 @@ import Pagination from '../../../components/ui/Pagination';
 import Spinner from '../../../components/ui/Spinner';
 import ConfirmDialog from '../../../components/ui/ConfirmDialog';
 
-const ROLES = ['All','client','agent','admin','compliance_officer','super_admin'];
-const ROLE_BADGE = { client:'info', agent:'default', admin:'warning', compliance_officer:'pending', super_admin:'danger' };
+const ROLES = ['All','client','agent','admin'];
+const ROLE_BADGE = { client:'info', agent:'default', admin:'warning' };
 
 export default function SuperUsersPage() {
   const [users, setUsers]   = useState([]);

@@ -10,8 +10,8 @@ export default function ComplianceLayout({ children }) {
   useEffect(() => {
     if (isLoading) return;
     if (!user) { router.replace('/login'); return; }
-    if (!['compliance_officer','admin','super_admin'].includes(user.role)) router.replace('/login');
+    if (user.role !== 'admin') router.replace('/login');
   }, [user, isLoading, router]);
-  if (isLoading || !user || !['compliance_officer','admin','super_admin'].includes(user.role)) return null;
+  if (isLoading || !user || user.role !== 'admin') return null;
   return <DashboardLayout>{children}</DashboardLayout>;
 }

@@ -10,8 +10,8 @@ export default function SuperLayout({ children }) {
   useEffect(() => {
     if (isLoading) return;
     if (!user) { router.replace('/login'); return; }
-    if (user.role !== 'super_admin') router.replace('/login');
+    if (user.role !== 'admin') router.replace('/login');
   }, [user, isLoading, router]);
-  if (isLoading || !user || user.role !== 'super_admin') return null;
+  if (isLoading || !user || user.role !== 'admin') return null;
   return <DashboardLayout>{children}</DashboardLayout>;
 }

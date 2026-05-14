@@ -7,11 +7,9 @@ import { useAuth } from '../contexts/AuthContext';
 import Footer from '../components/layout/Footer';
 
 const ROLE_DASHBOARDS = {
-  client:             '/client/dashboard',
-  agent:              '/agent/dashboard',
-  admin:              '/admin/dashboard',
-  compliance_officer: '/compliance/dashboard',
-  super_admin:        '/super/dashboard',
+  client: '/client/dashboard',
+  agent:  '/agent/dashboard',
+  admin:  '/admin/dashboard',
 };
 
 export default function LandingPage() {
