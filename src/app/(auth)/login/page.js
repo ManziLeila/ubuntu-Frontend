@@ -34,7 +34,7 @@ export default function LoginPage() {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const { data } = await api.post('/api/v1/auth/google', { idToken: tokenResponse.credential ?? tokenResponse.access_token });
+        const { data } = await api.post('/api/v1/auth/google', { accessToken: tokenResponse.access_token });
         const { setToken, setUser } = await import('../../../lib/auth');
         const { setAuthToken } = await import('../../../lib/api');
         setToken(data.accessToken);
@@ -180,7 +180,7 @@ export default function LoginPage() {
             <div style={{ marginTop: 28, padding: '14px 16px', borderRadius: 10, border: '1px solid rgba(201,168,112,.15)', background: 'rgba(201,168,112,.05)' }}>
               <p style={{ fontSize: 11, fontWeight: 700, color: '#c9a870', marginBottom: 6 }}>Demo credentials</p>
               <div style={{ fontSize: 11, color: 'rgba(245,240,232,.4)', lineHeight: 1.8, fontFamily: 'monospace' }}>
-                {[['client','Client@12345'],['agent','Agent@12345'],['admin','Admin@12345'],['compliance','Comply@12345'],['superadmin','Super@12345']].map(([u,p]) => (
+                {[['client','Client@12345'],['agent','Agent@12345'],['admin','Admin@12345']].map(([u,p]) => (
                   <div key={u}>{u}@demo.com / {p}</div>
                 ))}
               </div>

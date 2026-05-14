@@ -53,7 +53,7 @@ export default function RegisterPage() {
   const handleGoogleSignUp = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const { data } = await api.post('/api/v1/auth/google', { idToken: tokenResponse.credential ?? tokenResponse.access_token });
+        const { data } = await api.post('/api/v1/auth/google', { accessToken: tokenResponse.access_token });
         const { setToken, setUser } = await import('../../../lib/auth');
         const { setAuthToken } = await import('../../../lib/api');
         setToken(data.accessToken);
