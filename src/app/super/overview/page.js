@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
 import { api } from '../../../lib/api';
+import { getBackendOrigin } from '../../../lib/publicBackendUrl';
 import StatCard from '../../../components/ui/StatCard';
 import Spinner from '../../../components/ui/Spinner';
 import { Users, Send, DollarSign, ShieldCheck, AlertTriangle } from 'lucide-react';
@@ -23,7 +24,7 @@ export default function SuperOverviewPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+    const base = getBackendOrigin();
 
     Promise.all([
       api.get('/api/v1/super/platform-stats').then(r => setStats(r.data.data ?? r.data)).catch(() => {}),

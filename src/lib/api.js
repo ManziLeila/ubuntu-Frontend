@@ -1,12 +1,11 @@
 import axios from 'axios';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { getBackendOrigin } from './publicBackendUrl';
 
 // ---------------------------------------------------------------------------
 // Axios instance
 // ---------------------------------------------------------------------------
 export const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: 'http://127.0.0.1:3001',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -14,10 +13,11 @@ export const api = axios.create({
 });
 
 // ---------------------------------------------------------------------------
-// Request interceptor — attach Bearer token from localStorage
+// Request interceptor — base URL + Bearer token
 // ---------------------------------------------------------------------------
 api.interceptors.request.use(
   (config) => {
+    config.baseURL = getBackendOrigin();
     // localStorage is only available on the client side
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('gt_token');

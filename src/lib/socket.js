@@ -1,9 +1,5 @@
 import { io } from 'socket.io-client';
-
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  'http://localhost:3001';
+import { getBackendOrigin } from './publicBackendUrl';
 
 // ---------------------------------------------------------------------------
 // Module-level singleton — one socket connection for the entire app lifetime
@@ -33,18 +29,23 @@ export function getSocket() {
         ? localStorage.getItem('gt_token')
         : null;
 
-    socketInstance = io(SOCKET_URL, {
-      auth: {
-        token,
+    socketInstance = io(
+      process.env.NEXT_PUBLIC_SOCKET_URL?.trim()
+        ? process.env.NEXT_PUBLIC_SOCKET_URL.replace(/\/$/, '')
+        : getBackendOrigin(),
+      {
+        auth: {
+          token,
+        },
+        transports: ['websocket', 'polling'],
+        // Reconnect automatically up to 5 times, then stop
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        // Don't auto-connect; the caller decides when to connect
+        autoConnect: true,
       },
-      transports: ['websocket', 'polling'],
-      // Reconnect automatically up to 5 times, then stop
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      // Don't auto-connect; the caller decides when to connect
-      autoConnect: true,
-    });
+    );
 
     // Development-only logging
     if (process.env.NODE_ENV === 'development') {
