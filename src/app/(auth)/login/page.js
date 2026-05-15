@@ -87,8 +87,14 @@ export default function LoginPage() {
           <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
           {/* Brand */}
-          <div style={{ position: 'relative' }}>
-            <img src="/logo.jpeg" alt="Ubuntu International Exchange" style={{ width: 140, height: 'auto', objectFit: 'contain' }} />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(201,168,112,.25)' }}>
+              <img src="/logo.jpeg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#f0e2c4', lineHeight: 1.2 }}>Ubuntu International</div>
+              <div style={{ fontSize: 10, color: '#c9a870' }}>Exchange Ltd</div>
+            </div>
           </div>
 
           {/* Middle content */}

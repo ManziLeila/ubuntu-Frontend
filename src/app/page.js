@@ -63,8 +63,14 @@ export default function LandingPage() {
         {/* ── NAV ── */}
         <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '0 32px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(7,17,31,.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
           {/* Brand */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.jpeg" alt="Ubuntu International Exchange" style={{ height: 52, width: 'auto', objectFit: 'contain' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 42, height: 42, borderRadius: 10, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(201,168,112,.25)' }}>
+              <img src="/logo.jpeg" alt="Ubuntu International Exchange" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#f0e2c4', lineHeight: 1.2 }}>Ubuntu International</div>
+              <div style={{ fontSize: 10, color: '#c9a870', letterSpacing: '.04em' }}>Exchange Ltd</div>
+            </div>
           </div>
 
           {/* Links */}

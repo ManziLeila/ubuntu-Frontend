@@ -58,22 +58,22 @@ export default function Sidebar({ role = 'client', collapsed = false, onToggle }
       {/* Logo */}
       <div
         className={clsx(
-          'flex items-center justify-center border-b border-white/10',
-          collapsed ? 'px-2 py-3' : 'px-3 py-3'
+          'flex items-center border-b border-white/10',
+          collapsed ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-4'
         )}
       >
-        {collapsed ? (
+        <div style={{ width: 38, height: 38, borderRadius: 8, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(201,168,112,.25)' }}>
           <img
             src="/logo.jpeg"
             alt="Ubuntu International Exchange"
-            style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 6 }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }}
           />
-        ) : (
-          <img
-            src="/logo.jpeg"
-            alt="Ubuntu International Exchange"
-            style={{ width: 148, height: 'auto', objectFit: 'contain' }}
-          />
+        </div>
+        {!collapsed && (
+          <div className="min-w-0">
+            <p className="text-sm font-bold leading-tight truncate" style={{ color: '#f0e2c4' }}>Ubuntu Intl.</p>
+            <p className="text-[10px] truncate" style={{ color: '#c9a870' }}>Exchange Ltd</p>
+          </div>
         )}
       </div>
 
