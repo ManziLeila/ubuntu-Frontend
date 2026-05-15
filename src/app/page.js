@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Globe2, ShieldCheck, Zap, Users, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLang } from '../contexts/LanguageContext';
 import Footer from '../components/layout/Footer';
 
 const ROLE_DASHBOARDS = {
@@ -81,6 +82,7 @@ function LogoBadge({ size = 44, gold }) {
 export default function LandingPage() {
   const { user, isLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { lang, toggleLang } = useLang();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -143,8 +145,16 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Right: theme toggle + auth */}
+          {/* Right: lang + theme toggle + auth */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {/* Language toggle */}
+            <button onClick={toggleLang}
+              style={{ padding: '5px 12px', borderRadius: 8, border: `1.5px solid ${C.goldBdr}`, background: C.goldPale, cursor: 'pointer', fontSize: 12, fontWeight: 800, color: C.gold, transition: 'all .2s' }}
+              title={lang === 'en' ? 'Switch to French' : 'Passer en anglais'}
+            >
+              {lang === 'en' ? 'FR' : 'EN'}
+            </button>
+
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
