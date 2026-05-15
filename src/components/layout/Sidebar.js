@@ -62,7 +62,7 @@ export default function Sidebar({ role = 'client', collapsed = false, onToggle }
           collapsed ? 'justify-center px-2 py-3' : 'gap-3 px-4 py-4'
         )}
       >
-        <div style={{ width: 38, height: 38, borderRadius: 8, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(201,168,112,.25)' }}>
+        <div style={{ width: 38, height: 38, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #B89040', boxShadow: '0 0 0 3px rgba(184,144,64,.2)' }}>
           <img
             src="/logo.jpeg"
             alt="Ubuntu International Exchange"

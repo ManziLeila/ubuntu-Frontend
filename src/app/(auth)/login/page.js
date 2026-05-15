@@ -88,7 +88,7 @@ export default function LoginPage() {
 
           {/* Brand */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(201,168,112,.25)' }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', border: '2px solid #B89040', boxShadow: '0 0 0 3px rgba(184,144,64,.2)' }}>
               <img src="/logo.jpeg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
             </div>
             <div>
