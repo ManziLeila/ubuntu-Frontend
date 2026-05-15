@@ -82,7 +82,7 @@ function LogoBadge({ size = 44, gold }) {
 export default function LandingPage() {
   const { user, isLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { lang, toggleLang } = useLang();
+  const { lang, t, toggleLang } = useLang();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -137,7 +137,7 @@ export default function LandingPage() {
 
           {/* Links */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
-            {['About', 'Corridors', 'Rates', 'Contact'].map(l => (
+            {[t.land_about, t.land_corridors, t.land_rates, t.land_contact].map(l => (
               <a key={l} href="#" style={{ fontSize: 14, color: C.linkColor, textDecoration: 'none', fontWeight: 500, transition: 'color .15s' }}
                 onMouseOver={e => e.currentTarget.style.color = C.gold}
                 onMouseOut={e => e.currentTarget.style.color = C.linkColor}
@@ -166,9 +166,9 @@ export default function LandingPage() {
               {isDark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
 
-            <Link href="/apply-agent" style={{ fontSize: 13, fontWeight: 600, color: C.textSub, textDecoration: 'none', padding: '8px 14px', transition: 'color .15s' }}>Become an Agent</Link>
-            <Link href="/login" style={{ fontSize: 14, fontWeight: 700, color: C.gold, textDecoration: 'none', padding: '8px 18px' }}>Login</Link>
-            <Link href="/register" style={{ fontSize: 14, fontWeight: 700, padding: '9px 24px', borderRadius: 100, background: `linear-gradient(135deg,${C.gold},${C.goldViv})`, color: '#fff', textDecoration: 'none', boxShadow: `0 4px 16px ${C.gold}55` }}>Sign up</Link>
+            <Link href="/apply-agent" style={{ fontSize: 13, fontWeight: 600, color: C.textSub, textDecoration: 'none', padding: '8px 14px', transition: 'color .15s' }}>{t.land_become_agent}</Link>
+            <Link href="/login" style={{ fontSize: 14, fontWeight: 700, color: C.gold, textDecoration: 'none', padding: '8px 18px' }}>{t.land_login}</Link>
+            <Link href="/register" style={{ fontSize: 14, fontWeight: 700, padding: '9px 24px', borderRadius: 100, background: `linear-gradient(135deg,${C.gold},${C.goldViv})`, color: '#fff', textDecoration: 'none', boxShadow: `0 4px 16px ${C.gold}55` }}>{t.land_signup}</Link>
           </div>
         </nav>
 
@@ -191,26 +191,26 @@ export default function LandingPage() {
             <div className="hero-title" style={{ marginBottom: 8 }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 18px', borderRadius: 100, border: `1.5px solid ${C.goldBdr}`, background: C.goldPale, fontSize: 12, fontWeight: 700, color: C.gold, marginBottom: 28, transition: 'background .3s' }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: C.gold, animation: 'pulse 2s infinite' }} />
-                Empowering Diaspora · Unity in Every Transfer
+                {t.land_tagline}
               </div>
               <h1 style={{ fontSize: 'clamp(40px,6.5vw,76px)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-.03em', color: C.text, margin: 0, transition: 'color .3s' }}>
-                Send Money Home<br />
+                {t.land_hero_title}<br />
                 <span style={{ background: `linear-gradient(135deg,${C.gold} 20%,${C.goldViv} 60%,${C.gold} 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  Fast &amp; Secure
+                  {t.land_hero_sub_title}
                 </span>
               </h1>
             </div>
 
             <p className="hero-sub" style={{ fontSize: 18, color: C.textSub, maxWidth: 520, margin: '24px auto 40px', lineHeight: 1.7, transition: 'color .3s' }}>
-              Rwanda&rsquo;s trusted international remittance platform. Competitive rates, real-time tracking, fully regulated.
+              {t.land_hero_desc}
             </p>
 
             <div className="hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 40 }}>
               <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 52, padding: '0 32px', borderRadius: 100, background: `linear-gradient(135deg,${C.gold},${C.goldViv})`, color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', boxShadow: `0 6px 24px ${C.gold}55`, whiteSpace: 'nowrap' }}>
-                Send Money Now <ArrowRight size={17} />
+                {t.land_send_now} <ArrowRight size={17} />
               </Link>
               <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 52, padding: '0 30px', borderRadius: 100, border: `2px solid ${C.goldBdr}`, color: C.text, fontWeight: 600, fontSize: 15, textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color .3s, border-color .3s' }}>
-                Sign In
+                {t.land_sign_in}
               </Link>
             </div>
 
@@ -227,13 +227,13 @@ export default function LandingPage() {
           {/* Floating stat card — LEFT */}
           <div className="card-float stat-card" style={{ position: 'absolute', left: '4%', top: '36%', background: C.cardBg, border: `1px solid ${C.cardBdr}`, borderRadius: 20, padding: '20px 24px', minWidth: 190, cursor: 'default', boxShadow: C.cardShadow, backdropFilter: isDark ? 'blur(16px)' : 'none', transition: 'background .3s' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 11, color: C.textSub, fontWeight: 600 }}>Transfer Volume</span>
+              <span style={{ fontSize: 11, color: C.textSub, fontWeight: 600 }}>{t.land_transfer_vol}</span>
               <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.goldPale, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <ArrowUpRight size={14} style={{ color: C.gold }} />
               </div>
             </div>
             <div style={{ fontSize: 26, fontWeight: 900, color: C.text, letterSpacing: '-.02em' }}>₣2.4B+</div>
-            <div style={{ fontSize: 11, color: C.gold, marginTop: 4, fontWeight: 600 }}>Processed annually</div>
+            <div style={{ fontSize: 11, color: C.gold, marginTop: 4, fontWeight: 600 }}>{t.land_processed}</div>
             <div style={{ marginTop: 12, height: 4, borderRadius: 2, background: C.cardBdr }}>
               <div style={{ width: '72%', height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${C.gold},${C.goldViv})` }} />
             </div>
@@ -242,13 +242,13 @@ export default function LandingPage() {
           {/* Floating stat card — RIGHT */}
           <div className="card-float2 stat-card" style={{ position: 'absolute', right: '4%', top: '44%', background: C.cardBg, border: `1px solid ${C.cardBdr}`, borderRadius: 20, padding: '20px 24px', minWidth: 175, cursor: 'default', boxShadow: C.cardShadow, backdropFilter: isDark ? 'blur(16px)' : 'none', transition: 'background .3s' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 11, color: C.textSub, fontWeight: 600 }}>Success Rate</span>
+              <span style={{ fontSize: 11, color: C.textSub, fontWeight: 600 }}>{t.land_success_rate}</span>
               <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.goldPale, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <ArrowUpRight size={14} style={{ color: C.gold }} />
               </div>
             </div>
             <div style={{ fontSize: 26, fontWeight: 900, color: C.text, letterSpacing: '-.02em' }}>99.2%</div>
-            <div style={{ fontSize: 11, color: C.gold, marginTop: 4, fontWeight: 600 }}>Transaction success</div>
+            <div style={{ fontSize: 11, color: C.gold, marginTop: 4, fontWeight: 600 }}>{t.land_tx_success}</div>
             <div style={{ marginTop: 12, height: 4, borderRadius: 2, background: C.cardBdr }}>
               <div style={{ width: '99%', height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${C.gold},${C.goldViv})` }} />
             </div>
@@ -259,10 +259,10 @@ export default function LandingPage() {
         <section style={{ borderTop: `1px solid ${C.statsBdr}`, borderBottom: `1px solid ${C.statsBdr}`, padding: '48px 32px', display: 'flex', justifyContent: 'center', background: C.statsBg, transition: 'background .3s' }}>
           <div style={{ maxWidth: 900, width: '100%', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0 }}>
             {[
-              { val: '50K+',    label: 'Active Customers' },
-              { val: '12',      label: 'Countries Served' },
-              { val: '< 2min',  label: 'Avg. Delivery Time' },
-              { val: 'KYC/AML', label: 'Fully Compliant' },
+              { val: '50K+',    label: t.land_stat_customers },
+              { val: '12',      label: t.land_stat_countries },
+              { val: '< 2min',  label: t.land_stat_delivery },
+              { val: 'KYC/AML', label: t.land_stat_compliant },
             ].map(({ val, label }, i) => (
               <div key={label} style={{ textAlign: 'center', padding: '8px 24px', borderRight: i < 3 ? `1px solid ${C.statsBdr}` : 'none' }}>
                 <div style={{ fontSize: 30, fontWeight: 900, color: C.text, letterSpacing: '-.02em', transition: 'color .3s' }}>{val}</div>
@@ -275,15 +275,15 @@ export default function LandingPage() {
         {/* ── FEATURES ── */}
         <section style={{ maxWidth: 1100, margin: '0 auto', padding: '96px 32px' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 14 }}>Why Choose Us</div>
-            <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontWeight: 900, color: C.text, margin: 0, lineHeight: 1.15, transition: 'color .3s' }}>Built for the African diaspora</h2>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 14 }}>{t.land_why}</div>
+            <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontWeight: 900, color: C.text, margin: 0, lineHeight: 1.15, transition: 'color .3s' }}>{t.land_features_title}</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px,1fr))', gap: 20 }}>
             {[
-              { icon: Zap,        title: 'Instant Delivery',    desc: 'Real-time mobile money payouts to MTN, Airtel and major banks across Africa.' },
-              { icon: ShieldCheck,title: 'Regulated & Secure',   desc: 'Licensed operator with full KYC/AML compliance and end-to-end encryption.' },
-              { icon: Globe2,     title: 'Best Exchange Rates',  desc: 'Mid-market rates with transparent fees — no hidden costs, ever.' },
-              { icon: Users,      title: 'Agent Network',        desc: 'Hundreds of verified cash agents across Rwanda for in-person support.' },
+              { icon: Zap,        title: t.land_feat1_title, desc: t.land_feat1_desc },
+              { icon: ShieldCheck,title: t.land_feat2_title, desc: t.land_feat2_desc },
+              { icon: Globe2,     title: t.land_feat3_title, desc: t.land_feat3_desc },
+              { icon: Users,      title: t.land_feat4_title, desc: t.land_feat4_desc },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="feat-card" style={{ padding: '30px 26px', borderRadius: 20, border: `1.5px solid ${C.cardBdr}`, background: C.cardBg, boxShadow: C.cardShadow, transition: 'background .3s, border-color .2s, transform .2s' }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = C.gold; e.currentTarget.style.transform = 'translateY(-4px)'; }}
@@ -302,13 +302,13 @@ export default function LandingPage() {
         {/* ── CTA BANNER ── */}
         <section style={{ margin: '0 32px 96px', borderRadius: 24, padding: '64px 40px', textAlign: 'center', background: C.ctaBg, border: isDark ? `1px solid ${C.goldBdr}` : 'none', boxShadow: isDark ? 'none' : '0 16px 64px rgba(22,33,64,.2)' }}>
           <h2 style={{ fontSize: 'clamp(24px,4vw,42px)', fontWeight: 900, color: C.ctaText, margin: '0 0 16px', lineHeight: 1.15 }}>
-            Start sending money today
+            {t.land_cta_title}
           </h2>
           <p style={{ fontSize: 16, color: C.ctaSub, marginBottom: 36, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto' }}>
-            Join thousands of Rwandans who trust Ubuntu International Exchange every day.
+            {t.land_cta_desc}
           </p>
           <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 52, padding: '0 32px', borderRadius: 100, background: `linear-gradient(135deg,${C.gold},${C.goldViv})`, color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', boxShadow: `0 6px 24px ${C.gold}55` }}>
-            Create Free Account <ArrowRight size={18} />
+            {t.land_cta_btn} <ArrowRight size={18} />
           </Link>
         </section>
 
