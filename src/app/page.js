@@ -73,7 +73,7 @@ const DARK = {
 function LogoBadge({ size = 44, gold }) {
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: `2px solid ${gold}`, boxShadow: `0 0 0 3px ${gold}33` }}>
-      <img src="/logo.jpeg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
+      <img src="/logo.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
     </div>
   );
 }

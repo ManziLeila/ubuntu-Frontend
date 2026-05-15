@@ -130,6 +130,17 @@ export function AuthProvider({ children }) {
   }, [_clearSession, router]);
 
   // -------------------------------------------------------------------------
+  // setSession(token, user) — used after Google/OAuth sign-in
+  // -------------------------------------------------------------------------
+  const setSession = useCallback((newToken, newUser) => {
+    setToken(newToken);
+    setUser(newUser);
+    setAuthToken(newToken);
+    setTokenState(newToken);
+    setUserState(newUser);
+  }, []);
+
+  // -------------------------------------------------------------------------
   // updateUser(data)
   // -------------------------------------------------------------------------
   const updateUser = useCallback((data) => {
@@ -150,9 +161,10 @@ export function AuthProvider({ children }) {
       isLoading,
       login,
       logout,
+      setSession,
       updateUser,
     }),
-    [user, token, isLoading, login, logout, updateUser],
+    [user, token, isLoading, login, logout, setSession, updateUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
