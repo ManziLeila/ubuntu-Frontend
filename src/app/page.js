@@ -113,19 +113,19 @@ export default function LandingPage() {
               Rwanda&rsquo;s trusted international remittance platform. Competitive rates, real-time tracking, fully regulated.
             </p>
 
-            <div className="hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 36 }}>
-              <Link href="/register" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', borderRadius: 100, background: 'linear-gradient(135deg,#c9a870,#d4af7a)', color: '#07111f', fontWeight: 700, fontSize: 15, textDecoration: 'none', transition: 'opacity .15s', boxShadow: '0 8px 32px rgba(201,168,112,.25)' }}>
+            <div className="hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 40 }}>
+              <Link href="/register" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 52, padding: '0 32px', borderRadius: 100, background: 'linear-gradient(135deg,#c9a870,#d4af7a)', color: '#07111f', fontWeight: 700, fontSize: 15, textDecoration: 'none', transition: 'opacity .15s', boxShadow: '0 8px 32px rgba(201,168,112,.25)', whiteSpace: 'nowrap' }}>
                 Send Money Now <ArrowRight size={17} />
               </Link>
-              <Link href="/login" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 30px', borderRadius: 100, border: '1.5px solid rgba(201,168,112,.35)', color: '#f0e2c4', fontWeight: 600, fontSize: 15, textDecoration: 'none', transition: 'background .15s' }}>
+              <Link href="/login" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 52, padding: '0 30px', borderRadius: 100, border: '1.5px solid rgba(201,168,112,.35)', color: '#f0e2c4', fontWeight: 600, fontSize: 15, textDecoration: 'none', transition: 'background .15s', whiteSpace: 'nowrap' }}>
                 Sign In
               </Link>
             </div>
 
-            {/* Corridor pills — in flow, below buttons */}
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {/* Corridor pills */}
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'nowrap' }}>
               {[['RWF','AED'],['RWF','GHS'],['RWF','KES'],['RWF','UGX']].map(([f,t]) => (
-                <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 18px', borderRadius: 100, border: '1px solid rgba(201,168,112,.25)', background: 'rgba(10,22,40,.7)', backdropFilter: 'blur(8px)', fontSize: 12, fontWeight: 600, color: '#c9a870' }}>
+                <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 18px', borderRadius: 100, border: '1px solid rgba(201,168,112,.3)', background: '#0a1628', fontSize: 12, fontWeight: 600, color: '#c9a870', whiteSpace: 'nowrap' }}>
                   {f} <ArrowRight size={11} style={{ opacity: .6 }} /> {t}
                 </div>
               ))}
