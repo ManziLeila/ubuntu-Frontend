@@ -4,6 +4,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { SocketProvider } from '../contexts/SocketContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { ThemeProvider } from '../contexts/ThemeContext';
+import { LanguageProvider } from '../contexts/LanguageContext';
 import GoogleProvider from '../components/GoogleProvider';
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="bg-gray-50 text-gray-900 antialiased">
         <ThemeProvider>
+        <LanguageProvider>
         <GoogleProvider>
         <AuthProvider>
           <SocketProvider>
@@ -34,6 +36,7 @@ export default function RootLayout({ children }) {
           </SocketProvider>
         </AuthProvider>
         </GoogleProvider>
+        </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

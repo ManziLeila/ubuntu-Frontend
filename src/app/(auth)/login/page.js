@@ -112,8 +112,8 @@ export default function LoginPage() {
 
           {/* Brand */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', border: '2px solid #B89040', boxShadow: '0 0 0 3px rgba(184,144,64,.2)' }}>
-              <img src="/logo.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%' }} />
+            <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', border: '2px solid #B89040', boxShadow: '0 0 0 3px rgba(184,144,64,.2)', background: '#07111f' }}>
+              <img src="/logo.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#f0e2c4', lineHeight: 1.2 }}>Ubuntu International</div>

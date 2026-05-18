@@ -7,6 +7,7 @@ import { api } from '../../../lib/api';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useSocket } from '../../../contexts/SocketContext';
 import Spinner from '../../../components/ui/Spinner';
+import { useLang } from '../../../contexts/LanguageContext';
 
 const STATUS_COLORS = {
   COMPLETED:   { bg: 'rgba(22,163,74,.12)',  color: '#16a34a' },
@@ -34,6 +35,7 @@ function StatusBadge({ status }) {
 export default function ClientDashboardPage() {
   const { user } = useAuth();
   const { socket } = useSocket();
+  const { t } = useLang();
   const [wallet, setWallet]       = useState(null);
   const [transfers, setTransfers] = useState([]);
   const [kycStatus, setKycStatus] = useState(null);
@@ -72,10 +74,10 @@ export default function ClientDashboardPage() {
   const kycApproved = kycStatus?.application?.status === 'APPROVED' || kycStatus?.status === 'APPROVED';
 
   const stats = [
-    { label: 'Wallet Balance', value: wallet ? fmtAmt(wallet.balance, wallet.currency) : '— RWF', icon: Globe, color: '#c9a870' },
-    { label: 'Completed',      value: completed, icon: CheckCircle, color: '#16a34a' },
-    { label: 'Pending',        value: pending,   icon: Clock,       color: '#60a5fa' },
-    { label: 'KYC Status',     value: kycStatus?.application?.status ?? kycStatus?.status ?? 'Not Started', icon: ShieldCheck, color: kycApproved ? '#16a34a' : '#d97706' },
+    { label: t.dash_wallet,     value: wallet ? fmtAmt(wallet.balance, wallet.currency) : '— RWF', icon: Globe, color: '#c9a870' },
+    { label: t.dash_completed,  value: completed, icon: CheckCircle, color: '#16a34a' },
+    { label: t.dash_pending,    value: pending,   icon: Clock,       color: '#60a5fa' },
+    { label: t.dash_kyc_status, value: kycStatus?.application?.status ?? kycStatus?.status ?? t.dash_not_started, icon: ShieldCheck, color: kycApproved ? '#16a34a' : '#d97706' },
   ];
 
   return (
@@ -84,9 +86,9 @@ export default function ClientDashboardPage() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: '#f0e2c4', margin: 0 }}>
-            Welcome back, {user?.name?.split(' ')[0] ?? 'there'}!
+            {t.dash_welcome}, {user?.name?.split(' ')[0] ?? 'there'}!
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(245,240,232,.45)', marginTop: 4 }}>Here's your account overview</p>
+          <p style={{ fontSize: 13, color: 'rgba(245,240,232,.45)', marginTop: 4 }}>{t.dash_overview}</p>
         </div>
         <Link href="/client/send" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -94,7 +96,7 @@ export default function ClientDashboardPage() {
           background: 'linear-gradient(135deg,#c9a870,#d4af7a)',
           color: '#07111f', fontWeight: 700, fontSize: 14, textDecoration: 'none',
         }}>
-          <Send size={15} /> Send Money
+          <Send size={15} /> {t.dash_send_money}
         </Link>
       </div>
 
@@ -103,11 +105,11 @@ export default function ClientDashboardPage() {
         <div style={{ borderRadius: 12, padding: '14px 18px', background: 'rgba(217,119,6,.08)', border: '1px solid rgba(217,119,6,.2)', marginBottom: 24, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
           <ShieldCheck size={18} color="#d97706" style={{ flexShrink: 0, marginTop: 1 }} />
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: '#fbbf24', margin: '0 0 2px' }}>Complete your KYC verification</p>
-            <p style={{ fontSize: 12, color: 'rgba(245,240,232,.45)', margin: 0 }}>Verify your identity to unlock higher transfer limits and full platform access.</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#fbbf24', margin: '0 0 2px' }}>{t.dash_kyc_title}</p>
+            <p style={{ fontSize: 12, color: 'rgba(245,240,232,.45)', margin: 0 }}>{t.dash_kyc_desc}</p>
           </div>
           <Link href="/client/kyc" style={{ fontSize: 12, fontWeight: 600, color: '#c9a870', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-            Verify now →
+            {t.dash_kyc_cta}
           </Link>
         </div>
       )}
@@ -130,9 +132,9 @@ export default function ClientDashboardPage() {
       {/* Recent transfers */}
       <div style={{ borderRadius: 16, background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.08)', overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid rgba(255,255,255,.07)' }}>
-          <h2 style={{ fontSize: 15, fontWeight: 700, color: '#f0e2c4', margin: 0 }}>Recent Transfers</h2>
+          <h2 style={{ fontSize: 15, fontWeight: 700, color: '#f0e2c4', margin: 0 }}>{t.dash_recent}</h2>
           <Link href="/client/transfers" style={{ fontSize: 13, color: '#c9a870', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-            View all <ArrowUpRight size={14} />
+            {t.dash_view_all} <ArrowUpRight size={14} />
           </Link>
         </div>
 
@@ -140,8 +142,8 @@ export default function ClientDashboardPage() {
           <div style={{ padding: '48px 24px', textAlign: 'center' }}>
             <Send size={32} color="rgba(201,168,112,.25)" style={{ marginBottom: 12 }} />
             <p style={{ fontSize: 13, color: 'rgba(245,240,232,.35)', margin: 0 }}>
-              No transfers yet.{' '}
-              <Link href="/client/send" style={{ color: '#c9a870', textDecoration: 'none' }}>Send your first transfer</Link>
+              {t.dash_no_transfers}{' '}
+              <Link href="/client/send" style={{ color: '#c9a870', textDecoration: 'none' }}>{t.dash_send_first}</Link>
             </p>
           </div>
         ) : (
