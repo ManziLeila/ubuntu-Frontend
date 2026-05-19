@@ -11,7 +11,7 @@ import {
 import clsx from 'clsx';
 import { useLang } from '../../contexts/LanguageContext';
 
-export default function Sidebar({ role = 'client', collapsed = false, onToggle }) {
+export default function Sidebar({ role = 'client', collapsed = false, onToggle, onNavClick }) {
   const pathname = usePathname();
   const { t } = useLang();
 
@@ -76,7 +76,7 @@ export default function Sidebar({ role = 'client', collapsed = false, onToggle }
           const label = t[key] || key;
           const isActive = pathname === href || pathname.startsWith(href + '/');
           return (
-            <Link key={href} href={href} title={collapsed ? label : undefined}
+            <Link key={href} href={href} title={collapsed ? label : undefined} onClick={onNavClick}
               className={clsx('flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150', collapsed && 'justify-center px-0',
                 isActive ? 'text-navy-900 shadow-sm' : 'text-white/60 hover:text-white hover:bg-white/8')}
               style={isActive ? { background: 'linear-gradient(135deg, #c9a870, #d4af7a)', color: '#0a1628' } : {}}

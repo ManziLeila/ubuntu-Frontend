@@ -116,12 +116,17 @@ export default function RegisterPage() {
         .rg-panel { animation: fadein .4s ease }
         @keyframes spin { to { transform: rotate(360deg) } }
         .rg-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .rg-left { display: flex; }
+        @media (max-width: 700px) { .rg-left { display: none !important; } }
+        .rg-right { padding: 40px 56px; }
+        @media (max-width: 700px) { .rg-right { padding: 28px 20px !important; } }
+        @media (max-width: 480px) { .rg-grid2 { grid-template-columns: 1fr !important; } }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', transition: 'background .3s' }}>
 
         {/* ── LEFT PANEL (always dark brand) ── */}
-        <div style={{ flex: '0 0 44%', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 40, overflow: 'hidden' }}>
+        <div className="rg-left" style={{ flex: '0 0 44%', position: 'relative', flexDirection: 'column', justifyContent: 'space-between', padding: 40, overflow: 'hidden' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #0f1e38 0%, #07111f 40%, #1a1200 100%)' }} />
           <div style={{ position: 'absolute', top: '35%', left: '50%', transform: 'translate(-50%,-50%)', width: 460, height: 460, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.13) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: '8%', right: '-8%', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -166,7 +171,7 @@ export default function RegisterPage() {
         </div>
 
         {/* ── RIGHT PANEL ── */}
-        <div className="rg-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '40px 56px', overflowY: 'auto', background: right.bg, transition: 'background .3s', position: 'relative' }}>
+        <div className="rg-panel rg-right" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflowY: 'auto', background: right.bg, transition: 'background .3s', position: 'relative' }}>
 
           {/* Theme toggle */}
           <button

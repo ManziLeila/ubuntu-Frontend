@@ -12,13 +12,14 @@ export default function DashboardLayout({ children, title = '' }) {
   const { theme } = useTheme();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const isLight = theme === 'light';
 
-  const bg    = isLight ? '#f0ede8' : '#07111f';
-  const card  = isLight ? '#ffffff' : 'rgba(255,255,255,.04)';
-  const text  = isLight ? '#162140' : '#f0e2c4';
-  const sub   = isLight ? 'rgba(22,33,64,.5)' : 'rgba(245,240,232,.45)';
-  const bdr   = isLight ? 'rgba(22,33,64,.09)' : 'rgba(255,255,255,.07)';
+  const bg   = isLight ? '#f0ede8' : '#07111f';
+  const card = isLight ? '#ffffff' : 'rgba(255,255,255,.04)';
+  const text = isLight ? '#162140' : '#f0e2c4';
+  const sub  = isLight ? 'rgba(22,33,64,.5)' : 'rgba(245,240,232,.45)';
+  const bdr  = isLight ? 'rgba(22,33,64,.09)' : 'rgba(255,255,255,.07)';
 
   useEffect(() => {
     if (!isLoading && !user) router.replace('/login');
@@ -26,7 +27,9 @@ export default function DashboardLayout({ children, title = '' }) {
 
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth < 768) setCollapsed(true);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setCollapsed(mobile);
     }
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -44,17 +47,17 @@ export default function DashboardLayout({ children, title = '' }) {
 
   if (!user) return null;
 
+  const sidebarVisible = isMobile ? !collapsed : true;
+
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: bg, transition: 'background .3s' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: bg, transition: 'background .3s', position: 'relative' }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
 
-        /* ── Theme-aware overrides ── */
         .db-text-primary   { color: ${text} !important; }
         .db-text-secondary { color: ${sub} !important; }
         .db-card { background: ${card} !important; border-color: ${bdr} !important; }
 
-        /* Tailwind class overrides for inner pages */
         .text-gray-900, .text-gray-800, .text-gray-700 { color: ${text} !important; }
         .text-gray-600, .text-gray-500 { color: ${sub} !important; }
         .text-gray-400, .text-gray-300 { color: ${isLight ? 'rgba(22,33,64,.35)' : 'rgba(245,240,232,.35)'} !important; }
@@ -87,13 +90,42 @@ export default function DashboardLayout({ children, title = '' }) {
         }
         input::placeholder, textarea::placeholder { color: ${sub} !important; }
         label { color: ${isLight ? 'rgba(22,33,64,.65)' : 'rgba(245,240,232,.7)'} !important; }
+        .db-main { padding: 28px; }
+        @media (max-width: 640px) { .db-main { padding: 16px; } }
       `}</style>
 
-      <Sidebar role={user?.role} collapsed={collapsed} onToggle={() => setCollapsed(p => !p)} />
+      {/* Mobile backdrop — tap to close sidebar */}
+      {isMobile && sidebarVisible && (
+        <div
+          onClick={() => setCollapsed(true)}
+          style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(2px)' }}
+        />
+      )}
 
-      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', overflow: 'hidden' }}>
+      {/* Sidebar — overlay on mobile, inline on desktop */}
+      <div style={{
+        position: isMobile ? 'fixed' : 'relative',
+        top: 0, left: 0, bottom: 0,
+        zIndex: isMobile ? 50 : 'auto',
+        transform: isMobile
+          ? (sidebarVisible ? 'translateX(0)' : 'translateX(-100%)')
+          : 'none',
+        transition: 'transform .25s ease',
+        height: '100vh',
+        flexShrink: 0,
+      }}>
+        <Sidebar
+          role={user?.role}
+          collapsed={!isMobile && collapsed}
+          onToggle={() => setCollapsed(p => !p)}
+          onNavClick={() => { if (isMobile) setCollapsed(true); }}
+        />
+      </div>
+
+      {/* Main content */}
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <TopBar user={user} title={title} onMenuToggle={() => setCollapsed(p => !p)} />
-        <main style={{ flex: 1, overflowY: 'auto', padding: 28, background: bg, transition: 'background .3s' }}>
+        <main className="db-main" style={{ flex: 1, overflowY: 'auto', background: bg, transition: 'background .3s' }}>
           {children}
         </main>
       </div>
