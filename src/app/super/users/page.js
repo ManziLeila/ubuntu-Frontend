@@ -8,8 +8,9 @@ import Pagination from '../../../components/ui/Pagination';
 import Spinner from '../../../components/ui/Spinner';
 import ConfirmDialog from '../../../components/ui/ConfirmDialog';
 
-const ROLES = ['All','client','agent','admin'];
-const ROLE_BADGE = { client:'info', agent:'default', admin:'warning' };
+const ROLES = ['All', 'client', 'agent', 'admin'];
+const ROLE_BADGE = { client: 'info', agent: 'default', admin: 'warning' };
+const ROLE_OPTIONS = ['client', 'agent', 'admin'];
 
 export default function SuperUsersPage() {
   const [users, setUsers]   = useState([]);
@@ -18,7 +19,8 @@ export default function SuperUsersPage() {
   const [role, setRole]     = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [confirmAction, setConfirmAction] = useState(null); // {userId, type, currentStatus}
+  const [confirmAction, setConfirmAction] = useState(null);
+  // { userId, type:'status'|'role', currentStatus?, newStatus?, currentRole?, newRole? }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -44,11 +46,39 @@ export default function SuperUsersPage() {
         toast.success(`User ${newStatus}.`);
       } else if (confirmAction.type === 'role') {
         await api.put(`/api/v1/super/users/${confirmAction.userId}/role`, { role: confirmAction.newRole });
-        toast.success('Role updated.');
+        toast.success(`Role changed to ${confirmAction.newRole}.`);
       }
       setConfirmAction(null);
       load();
     } catch (err) { toast.error(err?.response?.data?.message ?? 'Failed.'); }
+  };
+
+  const confirmTitle = () => {
+    if (!confirmAction) return '';
+    if (confirmAction.type === 'role') return `Change role to "${confirmAction.newRole}"?`;
+    return confirmAction.currentStatus === 'suspended' ? 'Unsuspend user?' : 'Suspend user?';
+  };
+
+  const confirmMessage = () => {
+    if (!confirmAction) return '';
+    if (confirmAction.type === 'role') {
+      return `This will change the user's role from "${confirmAction.currentRole}" to "${confirmAction.newRole}". The change takes effect immediately.`;
+    }
+    return confirmAction.currentStatus === 'suspended'
+      ? "This will restore the user's access."
+      : 'The user will be unable to log in or perform any actions.';
+  };
+
+  const confirmVariant = () => {
+    if (!confirmAction) return 'default';
+    if (confirmAction.type === 'role') return 'default';
+    return confirmAction.currentStatus === 'suspended' ? 'default' : 'danger';
+  };
+
+  const confirmLabel = () => {
+    if (!confirmAction) return 'Confirm';
+    if (confirmAction.type === 'role') return 'Change Role';
+    return confirmAction.currentStatus === 'suspended' ? 'Unsuspend' : 'Suspend';
   };
 
   return (
@@ -71,7 +101,7 @@ export default function SuperUsersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
-                <tr>{['Name','Email','Role','Status','Country','Joined','Actions'].map(h => (
+                <tr>{['Name', 'Email', 'Role', 'Status', 'Country', 'Joined', 'Actions'].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{h}</th>
                 ))}</tr>
               </thead>
@@ -81,14 +111,33 @@ export default function SuperUsersPage() {
                     <td className="px-4 py-3 font-medium text-gray-900">{u.name}</td>
                     <td className="px-4 py-3 text-gray-600">{u.email}</td>
                     <td className="px-4 py-3"><Badge variant={ROLE_BADGE[u.role] ?? 'default'} size="sm">{u.role}</Badge></td>
-                    <td className="px-4 py-3"><Badge variant={u.status === 'suspended' ? 'danger' : 'success'} size="sm">{u.status ?? 'active'}</Badge></td>
+                    <td className="px-4 py-3"><Badge variant={u.status === 'suspended' ? 'danger' : u.status === 'pending' ? 'warning' : 'success'} size="sm">{u.status ?? 'active'}</Badge></td>
                     <td className="px-4 py-3 text-gray-500">{u.country}</td>
                     <td className="px-4 py-3 text-gray-400">{format(new Date(u.createdAt), 'dd MMM yy')}</td>
                     <td className="px-4 py-3">
-                      <button onClick={() => setConfirmAction({ userId: u.id, type:'status', currentStatus: u.status ?? 'active' })}
-                        className={`text-xs font-medium px-2.5 py-1 rounded-lg transition ${u.status === 'suspended' ? 'bg-green-100 hover:bg-green-200 text-green-700' : 'bg-red-100 hover:bg-red-200 text-red-700'}`}>
-                        {u.status === 'suspended' ? 'Unsuspend' : 'Suspend'}
-                      </button>
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                        {/* Suspend / Unsuspend */}
+                        <button
+                          onClick={() => setConfirmAction({ userId: u.id, type: 'status', currentStatus: u.status ?? 'active' })}
+                          className={`text-xs font-medium px-2.5 py-1 rounded-lg transition ${u.status === 'suspended' ? 'bg-green-100 hover:bg-green-200 text-green-700' : 'bg-red-100 hover:bg-red-200 text-red-700'}`}>
+                          {u.status === 'suspended' ? 'Unsuspend' : 'Suspend'}
+                        </button>
+
+                        {/* Role change select */}
+                        <select
+                          value={u.role}
+                          onChange={e => {
+                            const newRole = e.target.value;
+                            if (newRole !== u.role) {
+                              setConfirmAction({ userId: u.id, type: 'role', currentRole: u.role, newRole });
+                            }
+                          }}
+                          className="border border-gray-200 rounded-md bg-white text-gray-600"
+                          style={{ fontSize: 11, padding: '4px 6px', cursor: 'pointer' }}
+                        >
+                          {ROLE_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                        </select>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -97,16 +146,16 @@ export default function SuperUsersPage() {
           </div>
         )}
       </div>
-      {total > 15 && <div className="flex justify-center"><Pagination page={page} totalPages={Math.ceil(total/15)} onPageChange={setPage} /></div>}
+      {total > 15 && <div className="flex justify-center"><Pagination page={page} totalPages={Math.ceil(total / 15)} onPageChange={setPage} /></div>}
 
       <ConfirmDialog
         isOpen={!!confirmAction}
         onClose={() => setConfirmAction(null)}
         onConfirm={doAction}
-        title={confirmAction?.currentStatus === 'suspended' ? 'Unsuspend user?' : 'Suspend user?'}
-        message={confirmAction?.currentStatus === 'suspended' ? 'This will restore the user\'s access.' : 'The user will be unable to log in or perform any actions.'}
-        variant={confirmAction?.currentStatus === 'suspended' ? 'default' : 'danger'}
-        confirmLabel={confirmAction?.currentStatus === 'suspended' ? 'Unsuspend' : 'Suspend'}
+        title={confirmTitle()}
+        message={confirmMessage()}
+        variant={confirmVariant()}
+        confirmLabel={confirmLabel()}
       />
     </div>
   );

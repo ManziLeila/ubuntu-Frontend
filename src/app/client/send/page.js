@@ -53,9 +53,9 @@ export default function SendPage() {
   const form1 = useForm({ resolver: zodResolver(step1Schema), defaultValues: { corridor: '', sendAmount: '' } });
   const form2 = useForm({ resolver: zodResolver(step2Schema) });
 
-  // Load beneficiaries
+  // Load beneficiaries (API returns { beneficiaries: [...] })
   useEffect(() => {
-    api.get('/api/v1/beneficiaries').then(r => setBeneficiaries(r.data.data ?? [])).catch(() => {});
+    api.get('/api/v1/beneficiaries').then(r => setBeneficiaries(r.data.beneficiaries ?? r.data.data ?? [])).catch(() => {});
   }, []);
 
   // Fetch rate when corridor changes

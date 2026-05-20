@@ -1,11 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, ArrowLeft, Check, Sun, Moon } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Check, Sun, Moon, X, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -44,9 +44,26 @@ export default function RegisterPage() {
   const [showPw, setShowPw] = useState(false);
   const isLight = theme === 'light';
 
+  // OTP verification state
+  const [otpState, setOtpState] = useState(null); // { userId, otpId, email }
+  const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const otpRefs = useRef([]);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setTimeout(() => setResendCooldown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendCooldown]);
+
+  useEffect(() => {
+    if (otpState) setTimeout(() => otpRefs.current[0]?.focus(), 100);
+  }, [otpState]);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     if (!credentialResponse?.credential) {
@@ -65,14 +82,77 @@ export default function RegisterPage() {
 
   const onSubmit = async (data) => {
     try {
-      await api.post('/api/v1/auth/register', {
+      const { data: result } = await api.post('/api/v1/auth/register', {
         name: data.name, email: data.email, msisdn: data.msisdn,
         country: data.country, password: data.password,
       });
-      toast.success('Account created! Please sign in.');
-      router.push('/login');
+      if (result.requiresVerification) {
+        setOtpState({ userId: result.userId, otpId: result.otpId, email: data.email });
+        setOtpDigits(['', '', '', '', '', '']);
+        setResendCooldown(60);
+      } else {
+        toast.success('Account created! Please sign in.');
+        router.push('/login');
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message ?? 'Registration failed.');
+    }
+  };
+
+  const handleOtpDigit = (idx, val) => {
+    const digit = val.replace(/\D/g, '').slice(-1);
+    const next = [...otpDigits];
+    next[idx] = digit;
+    setOtpDigits(next);
+    if (digit && idx < 5) otpRefs.current[idx + 1]?.focus();
+    if (digit && idx === 5 && next.every(d => d)) submitOtp(next.join(''));
+  };
+
+  const handleOtpPaste = (e) => {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pasted.length === 6) {
+      setOtpDigits(pasted.split(''));
+      submitOtp(pasted);
+    }
+  };
+
+  const handleOtpKey = (idx, e) => {
+    if (e.key === 'Backspace' && !otpDigits[idx] && idx > 0) {
+      otpRefs.current[idx - 1]?.focus();
+    }
+  };
+
+  const submitOtp = async (code) => {
+    if (!otpState || otpLoading) return;
+    setOtpLoading(true);
+    try {
+      await api.post('/api/v1/auth/verify-email', {
+        userId: otpState.userId,
+        otpId: otpState.otpId,
+        code,
+      });
+      toast.success('Email verified! You can now sign in.');
+      router.push('/login');
+    } catch (err) {
+      toast.error(err?.response?.data?.error ?? 'Invalid OTP. Please try again.');
+      setOtpDigits(['', '', '', '', '', '']);
+      otpRefs.current[0]?.focus();
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (resendCooldown > 0 || !otpState) return;
+    try {
+      const { data } = await api.post('/api/v1/auth/resend-otp', { userId: otpState.userId });
+      setOtpState(s => ({ ...s, otpId: data.otpId }));
+      setOtpDigits(['', '', '', '', '', '']);
+      setResendCooldown(60);
+      toast.success('New OTP sent to your email.');
+      otpRefs.current[0]?.focus();
+    } catch (err) {
+      toast.error(err?.response?.data?.error ?? 'Failed to resend OTP.');
     }
   };
 
@@ -90,6 +170,7 @@ export default function RegisterPage() {
     link:        isLight ? '#B89040' : '#c9a870',
     toggleBg:    isLight ? 'rgba(22,33,64,.08)'  : 'rgba(255,255,255,.08)',
     toggleIcon:  isLight ? '#162140' : '#f0e2c4',
+    modalBg:     isLight ? 'rgba(0,0,0,.4)' : 'rgba(0,0,0,.6)',
   };
 
   return (
@@ -113,6 +194,7 @@ export default function RegisterPage() {
         .rg-link { color: ${right.link}; text-decoration: none; }
         .rg-link:hover { text-decoration: underline; }
         @keyframes fadein { from { opacity:0; transform:translateX(12px) } to { opacity:1; transform:translateX(0) } }
+        @keyframes fadeup { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
         .rg-panel { animation: fadein .4s ease }
         @keyframes spin { to { transform: rotate(360deg) } }
         .rg-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -121,7 +203,91 @@ export default function RegisterPage() {
         .rg-right { padding: 40px 56px; }
         @media (max-width: 700px) { .rg-right { padding: 28px 20px !important; } }
         @media (max-width: 480px) { .rg-grid2 { grid-template-columns: 1fr !important; } }
+        .otp-box:focus { border-color: #c9a870 !important; box-shadow: 0 0 0 3px rgba(201,168,112,.2); }
+        .otp-modal-card { animation: fadeup .3s ease; }
       `}</style>
+
+      {/* ── OTP Verification Modal ── */}
+      {otpState && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: right.modalBg, backdropFilter: 'blur(4px)', padding: 20 }}>
+          <div className="otp-modal-card" style={{ background: right.bg, borderRadius: 18, padding: '40px 36px', maxWidth: 420, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,.35)', position: 'relative', border: `1px solid ${right.inputBorder}` }}>
+
+            {/* Close button */}
+            <button
+              onClick={() => { setOtpState(null); setOtpDigits(['', '', '', '', '', '']); }}
+              style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: right.subtext, padding: 4, borderRadius: 6, display: 'flex' }}
+            >
+              <X size={18} />
+            </button>
+
+            {/* Icon */}
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(201,168,112,.1)', border: '1.5px solid rgba(201,168,112,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 22 }}>
+              <Mail size={24} color="#c9a870" />
+            </div>
+
+            <h2 style={{ fontSize: 23, fontWeight: 800, color: right.text, marginBottom: 10, lineHeight: 1.15 }}>Verify your email</h2>
+            <p style={{ fontSize: 13.5, color: right.subtext, lineHeight: 1.65, marginBottom: 30 }}>
+              We sent a 6-digit code to{' '}
+              <strong style={{ color: right.text }}>{otpState.email}</strong>.{' '}
+              Enter it below to activate your account.
+            </p>
+
+            {/* 6-digit OTP input */}
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 26 }}>
+              {otpDigits.map((d, i) => (
+                <input
+                  key={i}
+                  ref={el => { otpRefs.current[i] = el; }}
+                  className="otp-box"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={d}
+                  onChange={e => handleOtpDigit(i, e.target.value)}
+                  onKeyDown={e => handleOtpKey(i, e)}
+                  onPaste={i === 0 ? handleOtpPaste : undefined}
+                  style={{
+                    width: 52, height: 60, borderRadius: 12, textAlign: 'center',
+                    fontSize: 26, fontWeight: 700,
+                    border: `1.5px solid ${d ? '#c9a870' : right.inputBorder}`,
+                    background: d ? (isLight ? 'rgba(184,144,64,.07)' : 'rgba(201,168,112,.08)') : right.inputBg,
+                    color: right.text, outline: 'none',
+                    transition: 'border-color .15s, background .15s',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Submit button */}
+            <button
+              onClick={() => submitOtp(otpDigits.join(''))}
+              disabled={otpLoading || otpDigits.some(d => !d)}
+              style={{
+                width: '100%', padding: '14px', borderRadius: 10,
+                background: 'linear-gradient(135deg,#c9a870,#d4af7a)',
+                color: '#07111f', fontWeight: 700, fontSize: 15, border: 'none',
+                cursor: (otpLoading || otpDigits.some(d => !d)) ? 'not-allowed' : 'pointer',
+                opacity: (otpLoading || otpDigits.some(d => !d)) ? .6 : 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                marginBottom: 18, transition: 'opacity .15s',
+              }}
+            >
+              {otpLoading
+                ? <><span style={{ width: 16, height: 16, border: '2px solid #07111f', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin .7s linear infinite', display: 'inline-block' }} />Verifying…</>
+                : 'Verify Email'}
+            </button>
+
+            {/* Resend */}
+            <p style={{ textAlign: 'center', fontSize: 13, color: right.subtext }}>
+              Didn&apos;t receive it?{' '}
+              {resendCooldown > 0
+                ? <span style={{ color: right.subtext }}>Resend in {resendCooldown}s</span>
+                : <button onClick={handleResend} style={{ background: 'none', border: 'none', cursor: 'pointer', color: right.link, fontWeight: 600, fontSize: 13, padding: 0, textDecoration: 'underline' }}>Resend OTP</button>
+              }
+            </p>
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', minHeight: '100vh', transition: 'background .3s' }}>
 
