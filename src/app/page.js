@@ -181,6 +181,7 @@ export default function LandingPage() {
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: '50%', border: `1.5px solid ${C.goldBdr}`, background: C.goldPale, cursor: 'pointer', color: C.gold }}>
               {isDark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
+            <Link href="/apply-agent" style={{ fontSize: 13, fontWeight: 600, color: C.textSub, textDecoration: 'none', padding: '8px 10px' }}>{t.land_become_agent}</Link>
             <Link href="/login" style={{ fontSize: 14, fontWeight: 700, color: C.gold, textDecoration: 'none', padding: '8px 14px' }}>{t.land_login}</Link>
             <Link href="/register" style={{ fontSize: 13, fontWeight: 700, padding: '9px 20px', borderRadius: 100, background: `linear-gradient(135deg,${C.gold},${C.goldViv})`, color: '#fff', textDecoration: 'none' }}>{t.land_signup}</Link>
           </div>
@@ -209,6 +210,8 @@ export default function LandingPage() {
               <a key={l} href="#" onClick={() => setMenuOpen(false)}
                 style={{ fontSize: 15, color: C.linkColor, textDecoration: 'none', fontWeight: 500, padding: '10px 0', borderBottom: `1px solid ${C.navBdr}` }}>{l}</a>
             ))}
+            <Link href="/apply-agent" onClick={() => setMenuOpen(false)}
+              style={{ fontSize: 15, fontWeight: 600, color: C.textSub, textDecoration: 'none', padding: '10px 0', borderBottom: `1px solid ${C.navBdr}` }}>{t.land_become_agent}</Link>
             <Link href="/login" onClick={() => setMenuOpen(false)}
               style={{ fontSize: 15, fontWeight: 700, color: C.gold, textDecoration: 'none', padding: '10px 0', borderBottom: `1px solid ${C.navBdr}` }}>{t.land_login}</Link>
             <Link href="/register" onClick={() => setMenuOpen(false)}
