@@ -100,12 +100,16 @@ export default function LoginPage() {
         @keyframes fadein { from { opacity:0; transform:translateX(12px) } to { opacity:1; transform:translateX(0) } }
         .lg-panel { animation: fadein .4s ease }
         @keyframes spin { to { transform: rotate(360deg) } }
+        .lg-left { display: flex; }
+        @media (max-width: 700px) { .lg-left { display: none !important; } }
+        .lg-right { padding: 48px 56px; }
+        @media (max-width: 700px) { .lg-right { padding: 32px 20px !important; } }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', transition: 'background .3s' }}>
 
         {/* ── LEFT PANEL (always dark brand) ── */}
-        <div style={{ flex: '0 0 44%', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 40, overflow: 'hidden' }}>
+        <div className="lg-left" style={{ flex: '0 0 44%', position: 'relative', flexDirection: 'column', justifyContent: 'space-between', padding: 40, overflow: 'hidden' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #0f1e38 0%, #07111f 40%, #1a1200 100%)' }} />
           <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,112,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -145,7 +149,7 @@ export default function LoginPage() {
         </div>
 
         {/* ── RIGHT PANEL ── */}
-        <div className="lg-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '48px 56px', overflowY: 'auto', background: right.bg, transition: 'background .3s, color .3s', position: 'relative' }}>
+        <div className="lg-panel lg-right" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflowY: 'auto', background: right.bg, transition: 'background .3s, color .3s', position: 'relative' }}>
 
           {/* Theme toggle */}
           <button
